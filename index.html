@@ -1,0 +1,451 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Qortal API- qortalRequest Lab</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 16px;
+            background: #0b1d38;
+            color: #05acf7
+        }
+
+        h1, h2, h3 {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        p {
+            color: #05acf7;
+            font-size: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        input[type="text"], input[type="number"], textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: vertical;
+            background: #1e3c6b;
+            color: #05acf7;
+        }
+
+        button {
+            padding: 12px 24px;
+            border-radius: 4px;
+            background-color: #4CAF50;
+            color: #0b1d38;
+            cursor: pointer;
+        }
+
+            button:hover {
+                background-color: #45a049;
+            }
+
+    </style>
+</head>
+<body>
+    <p>Address of logged in account </p>
+    <!-- Address of logged in account -->
+    <div id="address-output"></div>
+    <button id="get-address-btn">Get Address</button>
+    <p>Public key of logged in account </p>
+    <!-- Public key of logged in account -->
+    <div id="public-key-output"></div>
+    <button id="get-public-key-btn">Get Public Key</button>
+    <p>Account data </p>
+    <!-- Account data -->
+    <input type="text" id="account-address-input" placeholder="Enter account address">
+    <div id="account-data-output"></div>
+    <button id="get-account-data-btn">Get Account Data</button>
+    <p>Names owned by account </p>
+    <!-- Names owned by account -->
+    <div id="account-names-output"></div>
+    <button id="get-account-names-btn">Get Account Names</button>
+    <p>Name data </p>
+    <!-- Name data -->
+    <input type="text" id="name-input" placeholder="Enter name">
+    <div id="name-data-output"></div>
+    <button id="get-name-data-btn">Get Name Data</button>
+    <p>Search QDN resources </p>
+    <!-- Search QDN resources -->
+    <input type="text" id="service-input" placeholder="Enter service">
+    <input type="text" id="identifier-input" placeholder="Enter identifier (optional)">
+    <input type="checkbox" id="default-checkbox">
+    <label for="default-checkbox">Return default resource</label>
+    <input type="text" id="name-list-filter-input" placeholder="Enter name list filter (optional)">
+    <input type="checkbox" id="include-status-checkbox">
+    <label for="include-status-checkbox">Include status</label>
+    <input type="checkbox" id="include-metadata-checkbox">
+    <label for="include-metadata-checkbox">Include metadata</label>
+    <input type="text" id="limit-input" placeholder="Enter limit (optional)">
+    <input type="text" id="offset-input" placeholder="Enter offset (optional)">
+    <input type="checkbox" id="reverse-checkbox">
+    <label for="reverse-checkbox">Reverse order</label>
+    <div id="search-qdn-resources-output"></div>
+    <button id="search-qdn-resources-btn">Search QDN Resources</button>
+    <p>Fetch QDN single file resource </p>
+    <!-- Fetch QDN single file resource -->
+    <input type="text" id="fetch-name-input" placeholder="Enter name">
+    <input type="text" id="fetch-service-input" placeholder="Enter service">
+    <input type="text" id="fetch-identifier-input" placeholder="Enter identifier (optional)">
+    <input type="checkbox" id="fetch-rebuild-checkbox">
+    <label for="fetch-rebuild-checkbox">Rebuild resource</label>
+    <div id="fetch-qdn-single-output"></div>
+    <button id="fetch-qdn-single-btn">Fetch QDN Single File Resource</button>
+    <p>Fetch file from multi file QDN resource </p>
+    <!-- Fetch file from multi file QDN resource -->
+    <input type="text" id="fetch-multi-name-input" placeholder="Enter name">
+    <input type="text" id="fetch-multi-service-input" placeholder="Enter service">
+    <input type="text" id="fetch-multi-identifier-input" placeholder="Enter identifier (optional)">
+    <input type="text" id="fetch-multi-filepath-input" placeholder="Enter filepath">
+    <input type="checkbox" id="fetch-multi-rebuild-checkbox">
+    <label for="fetch-multi-rebuild-checkbox">Rebuild resource</label>
+    <div id="fetch-qdn-multi-output"></div>
+    <button id="fetch-qdn-multi-btn">Fetch File from Multi File QDN Resource</button>
+    <p>Get QDN resource status </p>
+    <!-- Get QDN resource status -->
+    <input type="text" id="status-name-input" placeholder="Enter name">
+    <input type="text" id="status-service-input" placeholder="Enter service">
+    <input type="text" id="status-identifier-input" placeholder="Enter identifier (optional)">
+    <div id="get-qdn-status-output"></div>
+    <button id="get-qdn-status-btn">Get QDN Resource Status</button>
+    <p>Publish QDN resource </p>
+    <!-- Publish QDN resource -->
+    <input type="text" id="publish-name-input" placeholder="Enter name">
+    <input type="text" id="publish-service-input" placeholder="Enter service">
+    <input type="text" id="publish-data64-input" placeholder="Enter base64 encoded data">
+    <input type="text" id="publish-title-input" placeholder="Enter title">
+    <input type="text" id="publish-description-input" placeholder="Enter description">
+    <input type="text" id="publish-category-input" placeholder="Enter category">
+    <input type="text" id="publish-tags-input" placeholder="Enter tags (comma separated)">
+    <button id="publish-qdn-btn">Publish QDN Resource</button>
+    <p>Get wallet balance (QORT) </p>
+    <!-- Get wallet balance (QORT) -->
+    <div id="get-wallet-balance-qort-output"></div>
+    <button id="get-wallet-balance-qort-btn">Get QORT Wallet Balance</button>
+    <p>Get wallet balance (foreign coin) </p>
+    <!-- Get wallet balance (foreign coin) -->
+    <input type="text" id="foreign-coin-input" placeholder="Enter foreign coin symbol">
+    <div id="get-wallet-balance-foreign-output"></div>
+    <button id="get-wallet-balance-foreign-btn">Get Foreign Coin Wallet Balance</button>
+    <p>Get address or asset balance </p>
+    <!-- Get address or asset balance -->
+    <input type="text" id="balance-address-input" placeholder="Enter address">
+    <input type="text" id="balance-asset-input" placeholder="Enter asset ID (optional)">
+    <div id="get-balance-output"></div>
+    <button id="get-balance-btn">Get Address or Asset Balance</button>
+    <p>Send coin to address </p>
+    <!-- Send coin to address -->
+    <input type="text" id="send-address-input" placeholder="Enter address">
+    <input type="text" id="send-amount-input" placeholder="Enter amount">
+    <input type="text" id="send-coin-input" placeholder="Enter coin symbol">
+    <button id="send-coin-btn">Send Coin</button>
+    <p>Create QORT asset </p>
+    <!-- Create QORT asset -->
+    <input type="text" id="create-asset-name-input" placeholder="Enter asset name">
+    <input type="text" id="create-asset-description-input" placeholder="Enter asset description">
+    <input type="text" id="create-asset-decimals-input" placeholder="Enter number of decimals">
+    <input type="text" id="create-asset-total-supply-input" placeholder="Enter total supply">
+    <div id="create-asset-output"></div>
+    <button id="create-asset-btn">Create QORT Asset</button>
+    <p>Issue QORT asset </p>
+    <!-- Issue QORT asset -->
+    <input type="text" id="issue-asset-id-input" placeholder="Enter asset ID">
+    <input type="text" id="issue-asset-amount-input" placeholder="Enter amount">
+    <button id="issue-asset-btn">Issue QORT Asset</button>
+    <p>Transfer QORT asset </p>
+    <!-- Transfer QORT asset -->
+    <input type="text" id="transfer-asset-id-input" placeholder="Enter asset ID">
+    <input type="text" id="transfer-asset-recipient-input" placeholder="Enter recipient address">
+    <input type="text" id="transfer-asset-amount-input" placeholder="Enter amount">
+    <button id="transfer-asset-btn">Transfer QORT Asset</button>
+    <p>Burn QORT asset </p>
+    <!-- Burn QORT asset -->
+    <input type="text" id="burn-asset-id-input" placeholder="Enter asset ID">
+    <input type="text" id="burn-asset-amount-input" placeholder="Enter amount">
+    <button id="burn-asset-btn">Burn QORT Asset</button>
+    <p>Add metadata to QORT asset </p>
+    <!-- Add metadata to QORT asset -->
+    <input type="text" id="add-metadata-asset-id-input" placeholder="Enter asset ID">
+    <input type="text" id="add-metadata-key-input" placeholder="Enter metadata key">
+    <input type="text" id="add-metadata-value-input" placeholder="Enter metadata value">
+    <button id="add-metadata-btn">Add Metadata to QORT Asset</button>
+    
+    <script>
+        const qortalRequest = async (options) => {
+            // Code to send the request to the Qortal node and handle the response
+            // ...
+        }
+
+        // Get account address
+        const getAddressBtn = document.getElementById("get-address-btn");
+        getAddressBtn.addEventListener("click", async () => {
+            try {
+                const res = await qortalRequest({ action: "GET_ACCOUNT_ADDRESS" });
+                console.log(res);
+            } catch (err) {
+                console.error(err);
+            }
+        });
+
+        // Get account public key
+        const getPubkeyBtn = document.getElementById("get-pubkey-btn");
+        getPubkeyBtn.addEventListener("click", async () => {
+            try {
+                const res = await qortalRequest({ action: "GET_ACCOUNT_PUBLIC_KEY" });
+                console.log(res);
+            } catch (err) {
+                console.error(err);
+            }
+        });
+
+        // Get account data
+        const getAccountDataBtn = document.getElementById("get-account-data-btn");
+        const getAccountDataAddressInput = document.getElementById("get-account-data-address-input");
+        getAccountDataBtn.addEventListener("click", async () => {
+            try {
+                const address = getAccountDataAddressInput.value;
+                const res = await qortalRequest({ action: "GET_ACCOUNT_DATA", address });
+                console.log(res);
+            } catch (err) {
+                console.error(err);
+            }
+        });
+        // Get names owned by account
+        const getAccountNamesBtn = document.getElementById("get-account-names-btn");
+        const getAccountNamesAddressInput = document.getElementById("get-account-names-address-input");
+        getAccountNamesBtn.addEventListener("click", async () => {
+            try {
+                const address = getAccountNamesAddressInput.value;
+                const res = await qortalRequest({ action: "GET_ACCOUNT_NAMES", address });
+                console.log(res);
+            } catch (err) {
+                console.error(err);
+            }
+        });
+
+        // Get name data
+        const getNameDataBtn = document.getElementById("get-name-data-btn");
+        const getNameDataInput = document.getElementById("get-name-data-input");
+        getNameDataBtn.addEventListener("click", async () => {
+            try {
+                const name = getNameDataInput.value;
+                const res = await qortalRequest({ action: "GET_NAME_DATA", name });
+                console.log(res);
+            } catch (err) {
+                console.error(err);
+            }
+        });
+        // Search QDN resources
+        const searchQDNResourcesBtn = document.getElementById("search-qdn-resources-btn");
+        const searchQDNResourcesServiceInput = document.getElementById("search-qdn-resources-service-input");
+        const searchQDNResourcesIdentifierInput = document.getElementById("search-qdn-resources-identifier-input");
+        const searchQDNResourcesDefaultInput = document.getElementById("search-qdn-resources-default-input");
+        const searchQDNResourcesNameListFilterInput = document.getElementById("search-qdn-resources-name-list-filter-input");
+        const searchQDNResourcesIncludeStatusInput = document.getElementById("search-qdn-resources-include-status-input");
+        const searchQDNResourcesIncludeMetadataInput = document.getElementById("search-qdn-resources-include-metadata-input");
+        const searchQDNResourcesLimitInput = document.getElementById("search-qdn-resources-limit-input");
+        const searchQDNResourcesOffsetInput = document.getElementById("search-qdn-resources-offset-input");
+        const searchQDNResourcesReverseInput = document.getElementById("search-qdn-resources-reverse-input");
+        searchQDNResourcesBtn.addEventListener("click", async () => {
+            try {
+                const service = searchQDNResourcesServiceInput.value;
+                const identifier = searchQDNResourcesIdentifierInput.value;
+                const defaultOption = searchQDNResourcesDefaultInput.checked;
+                const nameListFilter = searchQDNResourcesNameListFilterInput.value;
+                const includeStatus = searchQDNResourcesIncludeStatusInput.checked;
+                const includeMetadata = searchQDNResourcesIncludeMetadataInput.checked;
+                const limit = searchQDNResourcesLimitInput.value;
+                const offset = searchQDNResourcesOffsetInput.value;
+                const reverse = searchQDNResourcesReverseInput.checked;
+                const res = await qortalRequest({
+                    action: "SEARCH_QDN_RESOURCES",
+                });
+                // Fetch QDN single file resource
+                const fetchQDNResourceBtn = document.getElementById("fetch-qdn-resource-btn");
+                const fetchQDNResourceNameInput = document.getElementById("fetch-qdn-resource-name-input");
+                const fetchQDNResourceServiceInput = document.getElementById("fetch-qdn-resource-service-input");
+                const fetchQDNResourceIdentifierInput = document.getElementById("fetch-qdn-resource-identifier-input");
+                const fetchQDNResourceRebuildInput = document.getElementById("fetch-qdn-resource-rebuild-input");
+                fetchQDNResourceBtn.addEventListener("click", async () => {
+                    try {
+                        const name = fetchQDNResourceNameInput.value;
+                        const service = fetchQDNResourceServiceInput.value;
+                        const identifier = fetchQDNResourceIdentifierInput.value;
+                        const rebuild = fetchQDNResourceRebuildInput.checked;
+                        const res = await qortalRequest({
+                            action: "FETCH_QDN_RESOURCE",
+                            name,
+                            service,
+                            identifier,
+                            rebuild
+                        });
+                        console.log(res);
+                    } catch (err) {
+                        console.error(err);
+                    }
+                });
+                // Fetch file from multi file QDN resource
+                const fetchQDNResourceFileBtn = document.getElementById("fetch-qdn-resource-file-btn");
+                const fetchQDNResourceFileNameInput = document.getElementById("fetch-qdn-resource-file-name-input");
+                const fetchQDNResourceFileServiceInput = document.getElementById("fetch-qdn-resource-file-service-input");
+                const fetchQDNResourceFileIdentifierInput = document.getElementById("fetch-qdn-resource-file-identifier-input");
+                const fetchQDNResourceFilePathInput = document.getElementById("fetch-qdn-resource-file-path-input");
+                const fetchQDNResourceFileRebuildInput = document.getElementById("fetch-qdn-resource-file-rebuild-input");
+                fetchQDNResourceFileBtn.addEventListener("click", async () => {
+                    try {
+                        const name = fetchQDNResourceFileNameInput.value;
+                        const service = fetchQDNResourceFileServiceInput.value;
+                        const identifier = fetchQDNResourceFileIdentifierInput.value;
+                        const filepath = fetchQDNResourceFilePathInput.value;
+                        const rebuild = fetchQDNResourceFileRebuildInput.checked;
+                        const res = await qortalRequest({
+                            action: "FETCH_QDN_RESOURCE",
+                            name,
+                            service,
+                            identifier,
+                            filepath,
+                            rebuild
+                        });
+                        console.log(res);
+                    } catch (err) {
+                        // code to handle errors
+                    }
+
+
+                    // Get QDN resource status
+                    const getQDNResourceStatusBtn = document.getElementById("get-qdn-resource-status-btn");
+                    const getQDNResourceStatusNameInput = document.getElementById("get-qdn-resource-status-name-input");
+                    const getQDNResourceStatusServiceInput = document.getElementById("get-qdn-resource-status-service-input");
+                    const getQDNResourceStatusIdentifierInput = document.getElementById("get-qdn-resource-status-identifier-input");
+                    getQDNResourceStatusBtn.addEventListener("click", async () => {
+                        try {
+                            const name = getQDNResourceStatusNameInput.value;
+                            const service = getQDNResourceStatusServiceInput.value;
+                            const identifier = getQDNResourceStatusIdentifierInput.value;
+                            const res = await qortalRequest({
+                                action: "GET_QDN_RESOURCE_STATUS",
+                                name,
+                                service,
+                                identifier
+                            });
+                            console.log(res);
+                        } catch (err) {
+                            console.error(err);
+                        }
+                    });
+                    // Publish QDN resource
+                    const publishQDNResourceBtn = document.getElementById("publish-qdn-resource-btn");
+                    const publishQDNResourceNameInput = document.getElementById("publish-qdn-resource-name-input");
+                    const publishQDNResourceServiceInput = document.getElementById("publish-qdn-resource-service-input");
+                    const publishQDNResourceData64Input = document.getElementById("publish-qdn-resource-data64-input");
+                    const publishQDNResourceTitleInput = document.getElementById("publish-qdn-resource-title-input");
+                    const publishQDNResourceDescriptionInput = document.getElementById("publish-qdn-resource-description-input");
+                    const publishQDNResourceCategoryInput = document.getElementById("publish-qdn-resource-category-input");
+                    const publishQDNResourceTagsInput = document.getElementById("publish-qdn-resource-tags-input");
+                    publishQDNResourceBtn.addEventListener("click", async () => {
+                        try {
+                            const name = publishQDNResourceNameInput.value;
+                            const service = publishQDNResourceServiceInput.value;
+                            const data64 = publishQDNResourceData64Input.value;
+                            const title = publishQDNResourceTitleInput.value;
+                            const description = publishQDNResourceDescriptionInput.value;
+                            const category = publishQDNResourceCategoryInput.value;
+                            const tags = publishQDNResourceTagsInput.value.split(",");
+                            await qortalRequest({
+                                action: "PUBLISH_QDN_RESOURCE",
+                                name,
+                                service,
+                                data64,
+                                title,
+                                description,
+                                category,
+                                tags
+                            });
+                            console.log("QDN resource published successfully.");
+                        } catch (err) {
+                            console.error(err);
+                        }
+                    });
+                    // Get wallet balance (QORT)
+                    const getWalletBalanceQORTBtn = document.getElementById("get-wallet-balance-qort-btn");
+                    getWalletBalanceQORTBtn.addEventListener("click", async () => {
+                        try {
+                            const res = await qortalRequest({
+                                action: "GET_WALLET_BALANCE",
+                                coin: "QORT"
+                            });
+                            console.log(res);
+                        } catch (err) {
+                            console.error(err);
+                        }
+                    });
+
+                    // Get wallet balance (foreign coin)
+                    const getWalletBalanceForeignCoinBtn = document.getElementById("get-wallet-balance-foreign-coin-btn");
+                    const getWalletBalanceForeignCoinInput = document.getElementById("get-wallet-balance-foreign-coin-input");
+                    getWalletBalanceForeignCoinBtn.addEventListener("click", async () => {
+                        try {
+                            const coin = getWalletBalanceForeignCoinInput.value;
+                            const res = await qortalRequest({
+                                action: "GET_WALLET_BALANCE",
+                                coin
+                            });
+                            console.log(res);
+                        } catch (err) {
+                            console.error(err);
+                        }
+                    });
+
+                    // Get address or asset balance
+                    const getBalanceBtn = document.getElementById("get-balance-btn");
+                    const getBalanceAddressInput = document.getElementById("get-balance-address-input");
+                    const getBalanceAssetIdInput = document.getElementById("get-balance-asset-id-input");
+                    getBalanceBtn.addEventListener("click", async () => {
+                        try {
+                            const address = getBalanceAddressInput.value;
+                            const assetId = getBalanceAssetIdInput.value;
+                            const res = await qortalRequest({
+                                action: "GET_BALANCE",
+                                address,
+                                assetId
+                            });
+                            console.log(res);
+                        } catch (err) {
+                            console.error(err);
+                        }
+                    });
+
+                    // Send coin to address
+                    const sendCoinBtn = document.getElementById("send-coin-btn");
+                    const sendCoinAddressInput = document.getElementById("send-coin-address-input");
+                    const sendCoinAmountInput = document.getElementById("send-coin-amount-input");
+                    const sendCoinCoinInput = document.getElementById("send-coin-coin-input");
+                    sendCoinBtn.addEventListener("click", async () => {
+                        try {
+                            const address = sendCoinAddressInput.value;
+                            const amount = sendCoinAmountInput.value;
+                            const coin = sendCoinCoinInput.value;
+                            await qortalRequest({
+                                action: "SEND_COIN",
+                                address,
+                                amount,
+                                coin
+                            });
+                            console.log("Coin sent successfully.");
+                        } catch (err) {
+                            console.error(err);
+                        }
+                    });
+
+    </script>
+</body>
+</html>
